@@ -5,8 +5,8 @@ class Akr < Formula
 
     bottle do
       root_url "https://github.com/akamai/homebrew-mfa/releases/download/1.0"
-      sha256 catalina:  "96d4cfda1a17b21c11a26994d2fef4aadd0c3f36edd76fd45dae72e46193a096"
-      sha256 big_sur: "96d4cfda1a17b21c11a26994d2fef4aadd0c3f36edd76fd45dae72e46193a096"
+      sha256 catalina:  "9647e1f1be7f80702d8df4c2f16f4970c363cc3dd23fc1e89899feeb62c5245e"
+      sha256 big_sur: "9647e1f1be7f80702d8df4c2f16f4970c363cc3dd23fc1e89899feeb62c5245e"
     end
 
     test do
