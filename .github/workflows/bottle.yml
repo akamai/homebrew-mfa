@@ -19,7 +19,7 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Update version
         run: |
-          cp template.akr.rb akr.rb
+          cp akr.rb.template akr.rb
           export BIN_URL="https://github.com/akamai/homebrew-mfa/releases/download/${{ github.event.inputs.versionString }}/akr-${{ github.event.inputs.versionString }}.big_sur.bottle.tar.gz"
           curl -s -L "$BIN_URL" | shasum -b -a 256 | head -c 64 > BIN_HASH
           sed -i -e 's/_VERSION_/${{ github.event.inputs.versionString }}/g' akr.rb
