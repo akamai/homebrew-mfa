@@ -1,0 +1,33 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Bottle
+
+on: 
+  workflow_dispatch:
+    inputs:
+      versionString:
+        description: 'The version semver string like 1.0.0'     
+        required: true  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      
+      # Runs a set of commands using the runners shell
+      - name: Update version
+        run: |
+          cp template.akr.rb akr.rb
+          export BIN_URL="https://github.com/akamai/homebrew-mfa/releases/download/${{ github.event.inputs.versionString }}/akr-${{ github.event.inputs.versionString }}.big_sur.bottle.tar.gz"
+          curl -s -L "$BIN_URL" | shasum -b -a 256 | head -c 64 > BIN_HASH
+          sed -i -e 's/_VERSION_/${{ github.event.inputs.versionString }}/g' akr.rb
+          sed -i -e "s/_BIN_SHA2_/$(cat BIN_HASH)/g" akr.rb
+          rm BIN_HASH
+          
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          title: "Release ${{ github.event.inputs.versionString }}"
+          body: "Update version to ${{ github.event.inputs.versionString }}"
