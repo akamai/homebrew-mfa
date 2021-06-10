@@ -10,7 +10,7 @@ class Akr < Formula
     end
 
     test do
-      system "#{bin}/akr", "setup"
+      system "which akr && akr setup"
     end
 
     def caveats
