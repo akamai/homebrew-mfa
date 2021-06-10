@@ -1,4 +1,4 @@
-class Akamai_MFA_Krypton < Formula
+class Akr < Formula
     desc "Developer CLI for SSH FIDO2 via Akamai MFA (kr/Krypton 2.0)"
     homepage "https://github.com/akamai/MFA"
     url "https://github.com/akamai/MFA"
