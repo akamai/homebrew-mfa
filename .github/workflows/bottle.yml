@@ -21,10 +21,12 @@ jobs:
         run: |
           cp akr.rb.template akr.rb
           export BIN_URL="https://github.com/akamai/homebrew-mfa/releases/download/${{ github.event.inputs.versionString }}/akr-${{ github.event.inputs.versionString }}.big_sur.bottle.tar.gz"
+          curl -s -L "https://github.com/akamai/homebrew-mfa/archive/${{ github.event.inputs.versionString }}.zip" | shasum -b -a 256 | head -c 64 > CODE_HASH
           curl -s -L "$BIN_URL" | shasum -b -a 256 | head -c 64 > BIN_HASH
           sed -i -e 's/_VERSION_/${{ github.event.inputs.versionString }}/g' akr.rb
           sed -i -e "s/_BIN_SHA2_/$(cat BIN_HASH)/g" akr.rb
-          rm BIN_HASH
+          sed -i -e "s/_CODE_SHA2_/$(cat CODE_HASH)/g" akr.rb
+          rm BIN_HASH CODE_HASH
           
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
