@@ -10,10 +10,16 @@ class Akr < Formula
       sha256 big_sur: "ede159e22c89b762f64e6f781ff2312c42b6699e919802f00cb84980e433b034"
     end
 
-    test do
-      system "which akr && akr setup"
+    depends_on "rust" => :build
+
+    def install
+        system "cargo", "install", "--bin", "akr", "--locked", "--root", prefix.to_s, "--path", "./crates/kr"
     end
 
+    test do
+        system "#{bin}/tunnelto", "setup"
+    end
+   
     def caveats
         "akr is now installed!\nRun `akr pair --setup` to pair with the Akamai MFA app."
     end
