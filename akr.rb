@@ -2,7 +2,7 @@ class Akr < Formula
     desc "Developer CLI for SSH FIDO2 via Akamai MFA (kr/Krypton 2.0)"
     homepage "https://github.com/akamai/homebrew-mfa"
     url "https://github.com/akamai/akr/archive/1.0.zip"
-    sha256 "2b1b21733fec92480423a1e090dcc92d86e0fdff1627cf8faeb341ac829080ef"
+    sha256 "b085c70bab5bda8f23e9d9745c6f3bc4b6c1e12a473b257dc6f6948b21d25162"
   
     bottle do
       root_url "https://github.com/akamai/akr/releases/download/1.0"
