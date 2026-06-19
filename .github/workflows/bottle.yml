@@ -2,12 +2,12 @@
 
 name: Bottle
 
-on: 
+on:
   workflow_dispatch:
     inputs:
       versionString:
-        description: 'The version semver string like 1.0.0'     
-        required: true  
+        description: 'The version semver string like 1.0.0'
+        required: true
 
 jobs:
   build:
@@ -15,19 +15,27 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      
+
       # Runs a set of commands using the runners shell
       - name: Update version
         run: |
+          set -euo pipefail
+          VERSION="${{ github.event.inputs.versionString }}"
+          BASE_URL="https://github.com/akamai/akr/releases/download/${VERSION}"
           cp akr.rb.template akr.rb
-          export BIN_URL="https://github.com/akamai/akr/releases/download/${{ github.event.inputs.versionString }}/akr-${{ github.event.inputs.versionString }}.big_sur.bottle.tar.gz"
-          curl -s -L "https://github.com/akamai/akr/archive/${{ github.event.inputs.versionString }}.zip" | shasum -b -a 256 | head -c 64 > CODE_HASH
-          curl -s -L "$BIN_URL" | shasum -b -a 256 | head -c 64 > BIN_HASH
-          sed -i -e 's/_VERSION_/${{ github.event.inputs.versionString }}/g' akr.rb
-          sed -i -e "s/_BIN_SHA2_/$(cat BIN_HASH)/g" akr.rb
-          sed -i -e "s/_CODE_SHA2_/$(cat CODE_HASH)/g" akr.rb
-          rm BIN_HASH CODE_HASH
-          
+
+          CODE_HASH=$(curl -fsSL "https://github.com/akamai/akr/archive/${VERSION}.zip" | shasum -b -a 256 | head -c 64)
+          sed -i -e "s/_CODE_SHA2_/${CODE_HASH}/g" akr.rb
+
+          for TAG in arm64_big_sur arm64_monterey arm64_ventura arm64_sonoma arm64_sequoia; do
+            BIN_URL="${BASE_URL}/akr-${VERSION}.${TAG}.bottle.tar.gz"
+            BIN_HASH=$(curl -fsSL "$BIN_URL" | shasum -b -a 256 | head -c 64)
+            PLACEHOLDER="_BIN_SHA2_$(echo "$TAG" | tr '[:lower:]' '[:upper:]')_"
+            sed -i -e "s/${PLACEHOLDER}/${BIN_HASH}/g" akr.rb
+          done
+
+          sed -i -e "s/_VERSION_/${VERSION}/g" akr.rb
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:

@@ -3,11 +3,14 @@ class Akr < Formula
     homepage "https://github.com/akamai/homebrew-mfa"
     url "https://github.com/akamai/akr/archive/_VERSION_.zip"
     sha256 "_CODE_SHA2_"
-  
+
     bottle do
       root_url "https://github.com/akamai/akr/releases/download/_VERSION_"
-      sha256 catalina:  "_BIN_SHA2_"
-      sha256 big_sur: "_BIN_SHA2_"
+      sha256 cellar: :any_skip_relocation, arm64_sequoia:  "_BIN_SHA2_ARM64_SEQUOIA_"
+      sha256 cellar: :any_skip_relocation, arm64_sonoma:   "_BIN_SHA2_ARM64_SONOMA_"
+      sha256 cellar: :any_skip_relocation, arm64_ventura:  "_BIN_SHA2_ARM64_VENTURA_"
+      sha256 cellar: :any_skip_relocation, arm64_monterey: "_BIN_SHA2_ARM64_MONTEREY_"
+      sha256 cellar: :any_skip_relocation, arm64_big_sur:  "_BIN_SHA2_ARM64_BIG_SUR_"
     end
 
     depends_on "rust" => :build
@@ -19,7 +22,7 @@ class Akr < Formula
     test do
         system "#{bin}/tunnelto", "setup"
     end
-   
+
     def caveats
         "akr is now installed!\nRun `akr pair --setup` to pair with the Akamai MFA app."
     end
